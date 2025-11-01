@@ -19,15 +19,18 @@ impl Episode {
         let unaccented = unidecode(&lowercased);
         let re = Regex::new(r"[^a-z0-9\s-]").unwrap();
         let cleaned = re.replace_all(&unaccented, "");
-        let dash_replaced = cleaned.replace(" ", "-");
-        let collapsed = Regex::new(r"-+").unwrap().replace_all(&dash_replaced, "-");
-        let title = collapsed.trim_matches('-').to_string();
+        let dash_replaced = cleaned.replace(" ", "_");
+        let collapsed = Regex::new(r"-+").unwrap().replace_all(&dash_replaced, "_");
+        let title = collapsed.trim_matches('_').to_string();
+
+        let reg = Regex::new(r"(capitol_)?([0-9]+)?(_)?(.*)").unwrap();
+        let title_cleaned = reg.replace(&title, "$4".to_string()).to_string();
 
         // 3cat adds OVAs in the middle of seasons as episode 1, which is wrong, we add ova- to the filename
         if self.tv_show_name.to_lowercase().contains("ova") {
-            format!("ova-{}-{}.{extension}", self.episode_number, title)
+            format!("ova_{}_{}.{extension}", self.episode_number, title_cleaned)
         } else {
-            format!("{}-{}.{extension}", self.episode_number, title)
+            format!("{}_{}.{extension}", self.episode_number, title_cleaned)
         }
     }
 }
@@ -49,7 +52,7 @@ mod tests {
         };
         assert_eq!(
             episode.filename("mp4"),
-            "7-t1xc7-veureu-una-cosa-allucinant-i-magica.mp4"
+            "7_t1xc7_veureu_una_cosa_allucinant_i_magica.mp4"
         );
 
         let episode_ova = Episode {
@@ -62,7 +65,7 @@ mod tests {
         };
         assert_eq!(
             episode_ova.filename("mp4"),
-            "ova-7-t1xc7-veureu-una-cosa-allucinant.mp4"
+            "ova_7_t1xc7_veureu_una_cosa_allucinant.mp4"
         );
         Ok(())
     }
