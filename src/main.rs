@@ -39,8 +39,10 @@ async fn main() -> Result<()> {
 
     let http_client = http_client::http_client();
     let id = id_retriever::get_tv_show_id(&args.tv_show_slug).await?;
+    println!("id: {}", id);
 
     let mut episodes = get_episodes(&http_client, id).await?;
+
 
     for episode in episodes.iter_mut() {
         if episode.episode_number < args.start_from_episode {
