@@ -115,15 +115,7 @@ _download() {
   slug="$1"
   dst="$DST_DIR/${slug}/"
 
-  # if [ "$slug" == "bola-de-drac" ]; then
-  #   dst="$DST_DIR/bdd/"
-  # else
-  #   dst="$DST_DIR/${slug}/"
-  # fi
-
   if [ -d "$dst" ] || mkdir -p "$dst"; then
-    # cargo run -- --tv-show-slug "${slug}" --directory "${dst}/${slug}/"
-
     # precompiled cat_show_downloader on PATH
     ./cat_show_downloader --tv-show-slug "$slug" --directory "$dst"
   fi
