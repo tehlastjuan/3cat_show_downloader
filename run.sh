@@ -117,7 +117,7 @@ _download() {
 
   if [ -d "$dst" ] || mkdir -p "$dst"; then
     # precompiled cat_show_downloader on PATH
-    ./cat_show_downloader --tv-show-slug "$slug" --directory "$dst"
+    cat_show_downloader --tv-show-slug "$slug" --directory "$dst"
   fi
 }
 
